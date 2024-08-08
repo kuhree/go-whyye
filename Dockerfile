@@ -10,12 +10,12 @@ FROM deps AS builder
 WORKDIR /app
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /go-rest
+RUN CGO_ENABLED=0 GOOS=linux go build -o /go-whyye
 
 FROM builder AS runner
 WORKDIR /app
 
 ENV PORT=${PORT:-8080}
 EXPOSE ${PORT:?}
-CMD ["/go-rest"]
+CMD ["/go-whyye"]
 

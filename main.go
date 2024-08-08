@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"go-rest/lib"
+	"go-whyye/lib"
 )
 
 type Response struct {
