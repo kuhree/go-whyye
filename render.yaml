@@ -1,0 +1,18 @@
+# List all services *except* PostgreSQL databases here
+services:
+  # A web service that builds from a Dockerfile
+  - type: web
+    runtime: docker
+    plan: free
+    region: ohio
+    name: go-rest
+    repo: https://github.com/kuhree/go-rest.git # Default: Repo containing render.yaml
+    scaling: # Autoscaling configuration
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 60 # Optional if targetCPUPercent is set
+      targetCPUPercent: 60    # Optional if targetMemory is set
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: 8080
