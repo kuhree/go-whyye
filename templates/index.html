@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iconic Quotes</title>
+</head>
+<body>
+    <h1>Users:</h1>
+    <ul>
+        {{ range .Users }}
+            <li>{{ .Name }} ({{ .Id }})</li>
+        {{ end }}
+    </ul>
+
+    <form action="/quotes/{{.SelectedUserId}}" method="get">
+        <button type="submit">Get Quote</button>
+    </form>
+
+    <h1>Quotes:</h1>
+    <ul>
+        {{ range .Quotes }}
+            <li>{{ .Text }} (by {{ .UserName }})</li>
+        {{ end }}
+    </ul>
+</body>
+</html>

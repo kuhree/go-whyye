@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"net/http"
 
-	"go-whyye/lib"
+	"go-whyye/pkg/services"
 )
 
 type Response struct {
@@ -15,7 +16,7 @@ type Response struct {
 
 func handleKanye(w http.ResponseWriter, r *http.Request) {
 	baseUrl := "https://api.kanye.rest"
-	svc := lib.NewKanyeRestSvc(baseUrl)
+	svc := services.NewKanyeRestSvc(baseUrl)
 
 	quote, err := svc.FetchQuote()
 	if err != nil {
@@ -35,8 +36,13 @@ func main() {
 	http.HandleFunc("/api/kanye", handleKanye)
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 
-	fmt.Println("Server starting on port 8080...")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+			port = "8080" // default port if not set
+	} 
+
+	fmt.Printf("Server listening on port %s...\n", port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		panic(err)
 	}
 }
