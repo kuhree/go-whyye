@@ -10,7 +10,7 @@ FROM deps AS builder
 WORKDIR /app
 
 COPY . .
-RUN mkdir ./out/{bin,share,state}
+RUN mkdir -p ./out/{bin,share,state}
 RUN CGO_ENABLED=0 GOOS=linux go build -o /go-whyye
 
 FROM builder AS runner
