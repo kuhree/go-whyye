@@ -32,5 +32,5 @@ docker-build:
 	docker build --tag go-whyye --tag git.littlevibe.net/kuhree/go-whyye:latest .
 
 docker-serve: 
-	docker run -it --rm -e PORT=8080 -p 8080:8080 git.littlevibe.net/kuhree/go-whyye:latest
+	docker run -it --name go-whyye --rm -e PORT=8080 -p 8080:8080 git.littlevibe.net/kuhree/go-whyye:latest
 
