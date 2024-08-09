@@ -28,6 +28,7 @@ func main() {
 	if sentry_dsn, exists := os.LookupEnv("SENTRY_DSN"); app_env == "production" && exists {
 		err := sentry.Init(sentry.ClientOptions{
 			Dsn:              sentry_dsn,
+			EnableTracing:    true,
 			TracesSampleRate: 1.0,
 		})
 
@@ -38,7 +39,7 @@ func main() {
 		defer sentry.Flush(2 * time.Second)
 	}
 
-	sentryHandler := sentryhttp.New(sentryhttp.Options{ Repanic: true, })
+	sentryHandler := sentryhttp.New(sentryhttp.Options{Repanic: true})
 	http.HandleFunc("/sentry", sentryHandler.HandleFunc(func(rw http.ResponseWriter, r *http.Request) {
 		panic("y tho")
 	}))

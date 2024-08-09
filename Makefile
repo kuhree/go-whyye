@@ -2,6 +2,7 @@
 
 init:
 	mkdir -p out out/bin out/share out/state
+	go mod download
 
 clean:
 	rm -rf out/* 
