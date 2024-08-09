@@ -19,5 +19,7 @@ WORKDIR /app
 ENV PORT=${PORT:-8080}
 ENV APP_ENV=${APP_ENV:-production}
 EXPOSE ${PORT:?}
+
+RUN mkdir -p ./out/{bin,share,state}
 CMD ["/go-whyye"]
 
