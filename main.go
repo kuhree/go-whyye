@@ -1,66 +1,24 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
 
-	"go-whyye/pkg/services"
 	"go-whyye/pkg/db"
+	"go-whyye/pkg/handlers"
 )
 
-type Response struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
-}
-
-func handleKanye(w http.ResponseWriter, r *http.Request) {
-	baseUrl := "https://api.kanye.rest"
-	svc := services.NewKanyeRestSvc(baseUrl)
-
-	quote, err := svc.FetchQuote()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	data := Response{
-		Status:  "ok",
-		Message: quote.Quote,
-	}
-
-	json.NewEncoder(w).Encode(data)
-}
-
-func prepareDb() (*db.Database, error) {
-	db, err := db.NewDatabase()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	err = db.CreateSchema()
-	if err != nil {
-			return nil, err
-	}
-
-	err = db.SeedDatabase()
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
-}
-
 func main() {
-	_, err := prepareDb()
+	err := db.PrepareDb()
 	if err != nil {
 		panic(err)
 	}
 
-	http.HandleFunc("/api/kanye", handleKanye)
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
+	http.HandleFunc("/api/users", handlers.UsersListAllHandler)
+	http.HandleFunc("/api/quotes", handlers.QuotesListAllHandler) // support ?userId=[id] to filter by user
+	http.HandleFunc("/", handlers.IndexHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -1,25 +1,58 @@
+
+
 <!DOCTYPE html>
+
 <html>
-<head>
-    <title>Iconic Quotes</title>
-</head>
-<body>
-    <h1>Users:</h1>
-    <ul>
-        {{ range .Users }}
-            <li>{{ .Name }} ({{ .Id }})</li>
-        {{ end }}
-    </ul>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why, Ye?</title>
+    <meta type="description" content="Get a random quote from your favorite icons." />
+    <link rel="stylesheet" type="text/css" href="/static/index.css"/>
+  </head>
 
-    <form action="/quotes/{{.SelectedUserId}}" method="get">
-        <button type="submit">Get Quote</button>
-    </form>
+  <body>
+    <main>
+      <section class="container container--hero">
+        <h1>Why, Ye?</h1>
+        <p>The best quotes from your favorite icons on the internet.</p>
+      </section>
 
-    <h1>Quotes:</h1>
-    <ul>
-        {{ range .Quotes }}
-            <li>{{ .Text }} (by {{ .UserName }})</li>
-        {{ end }}
-    </ul>
-</body>
+      <section class="container container--form">
+          <form method="GET" id="form--name">
+              <select name="user_id" id="user_id">
+                  <!-- render users list from db -->
+                  {{ range .Users }}
+                      {{ if eq $.UserId .ID }}
+                          <option value="{{ .ID }}" selected="true">{{ .Name }}</option>
+                      {{ else }}
+                          <option value="{{ .ID }}">{{ .Name }}</option>
+                      {{ end }}
+                  {{ end }}
+              </select>
+              <button type="submit">Get Random Quote</button>
+          </form>
+
+        <div class="container container--quote">
+          <!-- display random quote -->
+          <h2 id="quote">{{.Quote}}</h2>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>
+        <small>
+          Powered by <a href="https://go.dev">golang</a>, <a href="https://api.kanye.rest">kanye.rest</a>, and an insatiable curiosity. Hosted on <a href="https://render.com">Render</a>
+        </small>
+      </div>
+      <div>
+        <small>
+          Copy it all you want. Idc. {{ .Year }}&#169;
+        </small>
+      </div>
+    </footer>
+
+    <script src="/static/index.js"></script>
+  </body>
 </html>

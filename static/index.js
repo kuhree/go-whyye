@@ -4,8 +4,8 @@ const selectors = {
 }
 
 async function handleFormSubmit(e) {
-  e.preventDefault()
   e.stopPropagation()
+  e.preventDefault()
 
   const { target } = e;
 
@@ -13,28 +13,18 @@ async function handleFormSubmit(e) {
     target.classList.add("loading")
   }
 
-  const response = await fetch("/api/kanye")
-  const dataOrError = await response.json()
-  if (!response.ok || response.status < 200 || response.status > 299) {
-    console.warn("API request failed.")
-    console.error(dataOrError)
+  const formData = new FormData(e.target);
+  const entries = Object.fromEntries(formData.entries())
+
+  if('user_id' in entries && !isNaN(entries['user_id'])) {
+    const params = new window.URLSearchParams(window.location.search)
+    params.set("user_id", entries['user_id'])
+    params.set("limit", entries['limit'] ?? 1)
+    params.set("offset", entries['offset'] ?? 0)
+
+    window.location.search = params.toString()
     await resetForm(target)
-    alert("Couldn't get your quote. Sorry about that. Please try again later.")
-    return
   } 
-
-  await render(dataOrError)
-  await resetForm(target)
-}
-
-async function render(data) {
-  const quote = document.querySelector(selectors.quote)
-  if(!quote){
-    console.error("Could not find quote. Exiting...")
-    return
-  }
-
-  quote.innerHTML = data.message
 }
 
 async function resetForm(target) {

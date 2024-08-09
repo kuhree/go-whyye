@@ -12,7 +12,7 @@ type KanyeRestSvc struct {
 }
 
 type KanyeRestApiResponseJSON struct {
-	Quote string 
+	Quote string `json:"quote"`
 }
 
 func NewKanyeRestSvc(baseUrl string) *KanyeRestSvc {
