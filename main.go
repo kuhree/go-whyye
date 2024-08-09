@@ -36,8 +36,6 @@ func main() {
 		}
 
 		defer sentry.Flush(2 * time.Second)
-
-		sentry.CaptureMessage("It works!")
 	}
 
 	sentryHandler := sentryhttp.New(sentryhttp.Options{ Repanic: true, })
