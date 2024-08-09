@@ -18,7 +18,7 @@ type Database struct {
 func NewDatabase() (*Database, error) {
 	app_env, exists := os.LookupEnv("APP_ENV")
 	if !exists {
-		app_env = "production"
+		app_env = "development"
 	}
 
 	db, err := sql.Open("sqlite3", "out/state/go-whyye."+app_env+".sql")
