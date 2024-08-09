@@ -11,7 +11,7 @@ WORKDIR /app
 
 COPY . .
 RUN mkdir -p ./out/{bin,share,state}
-RUN CGO_ENABLED=1 GOOS=linux go build -o /go-whyye
+RUN CGO_ENABLED=1 GOOS=linux go build -o ./go-whyye
 
 FROM builder AS runner
 WORKDIR /app
@@ -21,5 +21,5 @@ ENV APP_ENV=${APP_ENV:-production}
 EXPOSE ${PORT:?}
 
 RUN mkdir -p ./out/{bin,share,state}
-CMD ["/go-whyye"]
+CMD ["./go-whyye"]
 
