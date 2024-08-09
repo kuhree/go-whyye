@@ -13,7 +13,7 @@ dev: init
 	gow -c -v run .
 
 build: init
-	go build -o ./out/bin/main main.go
+	go build -a -o ./out/bin/go-whyye main.go
 
 serve: build
 	./out/bin/main
@@ -25,11 +25,11 @@ docker-push: docker-pull docker-build
 	docker push git.littlevibe.net/kuhree/go-whyye:latest  
 
 docker-dev: 
-	docker run -it --rm -e PORT=8080 -p 8080:8080 -e APP_ENV=development --entrypoint bash go-whyye
+	docker run -it --rm -e PORT=8080 -p 8080:8080 -e APP_ENV=development --entrypoint sh git.littlevibe.net/kuhree/go-whyye:latest
 
 docker-build:
-	docker build --tag git.littlevibe.net/kuhree/go-whyye:latest .
+	docker build --tag go-whyye --tag git.littlevibe.net/kuhree/go-whyye:latest .
 
 docker-serve: 
-	docker run -it --rm -e PORT=8080 -p 8080:8080 go-whyye
+	docker run -it --rm -e PORT=8080 -p 8080:8080 git.littlevibe.net/kuhree/go-whyye:latest
 

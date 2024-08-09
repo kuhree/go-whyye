@@ -29,7 +29,7 @@ WORKDIR /app
 
 COPY . .
 RUN mkdir -p ./out ./out/state ./out/share ./out/bin && \
-  go build -ldflags '-w -s -extldflags "-static"' -a -o ./out/bin/main main.go
+  go build -ldflags '-w -s -extldflags "-static"' -a -o ./entrypoint main.go
 
 FROM scratch AS runner
 ENV USER=appuser                        
@@ -43,6 +43,7 @@ COPY --from=base /etc/passwd /etc/passwd
 COPY --from=base /etc/group /etc/group
 COPY --from=builder /app ./
 
+RUN chown -R "${USER}:${USER}" /app
 USER appuser
 EXPOSE ${PORT:?}
-CMD ["./out/bin/main"]
+CMD ["./entrypoint"]
