@@ -3,6 +3,10 @@
 include .env
 include .env.production
 
+DATE=$(shell date +%Y%m%d)
+SHORT_SHA=$(shell git rev-parse --short HEAD)
+LONG_SHA=$(shell git rev-parse HEAD)
+
 init:
 	mkdir -p out out/bin out/share out/state
 	go mod download
@@ -30,7 +34,7 @@ docker-pull:
 
 docker-release: docker-pull docker-build
 	docker push \
-		git.littlevibe.net/kuhree/go-whyye:latest  
+		git.littlevibe.net/kuhree/go-whyye
 
 docker-dev: 
 	docker run \
@@ -39,7 +43,11 @@ docker-dev:
 
 docker-build:
 	docker build \
-		--tag go-whyye --tag git.littlevibe.net/kuhree/go-whyye:latest \
+		--tag go-whyye \
+		--tag git.littlevibe.net/kuhree/go-whyye:latest \
+		--tag git.littlevibe.net/kuhree/go-whyye:${DATE} \
+		--tag git.littlevibe.net/kuhree/go-whyye:${SHORT_SHA} \
+		--tag git.littlevibe.net/kuhree/go-whyye:${LONG_SHA} \
 		.
 
 docker-serve: 
