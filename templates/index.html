@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 
 <html>
@@ -9,6 +7,15 @@
     <title>Why, Ye?</title>
     <meta type="description" content="Get a random quote from your favorite icons." />
     <link rel="stylesheet" type="text/css" href="/static/index.css"/>
+    {{ if .AnalyticsHost }}
+      <script 
+        defer 
+        src="{{ .AnalyticsSrc }}" 
+        data-website-id="{{ .AnalyticsId }}"
+        data-host-url="{{ .AnalyticsHost }}"
+      >
+      </script>
+    {{ end }}
   </head>
 
   <body>
@@ -30,12 +37,19 @@
                       {{ end }}
                   {{ end }}
               </select>
-              <button type="submit">Get Random Quote</button>
+              <button 
+                type="submit" 
+                data-umami-event="get-quote"
+                data-umami-event-userid="{{ .UserId }}"
+                data-umami-event-quote="{{ .Quote }}"
+              >
+                Get Random Quote
+              </button>
           </form>
 
         <div class="container container--quote">
           <!-- display random quote -->
-          <h2 id="quote">{{.Quote}}</h2>
+          <h2 id="message">{{ .Quote }}</h2>
         </div>
       </section>
     </main>

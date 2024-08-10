@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"text/template"
 	"time"
+	"os"
 
 	"go-whyye/pkg/db"
 	"go-whyye/pkg/quote"
@@ -182,12 +183,26 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 		qt = quote.GetRandom(quotes)
 	}
+	var AnalyticsSrc string
+	var AnalyticsId string
+	var AnalyticsHost string
+
+	app_env, exists := os.LookupEnv("APP_ENV")
+	if exists && app_env == "production" {
+		AnalyticsSrc = "https://umami.littlevibe.net/script.js"
+		AnalyticsId = "aa24ac89-ef05-4bdf-a99b-402988a6f226"
+		AnalyticsHost = "https://umami.littlevibe.net/script.js"
+	}
 
 	vars := map[string]interface{}{
 		"Users":  users,
 		"UserId": userId,
 		"Quote":  qt.String(),
 		"Year":   time.Now().Year(),
+
+		"AnalyticsSrc": AnalyticsSrc,
+		"AnalyticsId": AnalyticsId,
+		"AnalyticsHost": AnalyticsHost,
 	}
 
 	err = tmpl.ExecuteTemplate(w, "index.html", vars)
@@ -197,3 +212,4 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
