@@ -18,7 +18,7 @@ export SENTRY_PROJECT=${SENTRY_PROJECT:-"go-whyye"}
 # If version is empty, set a default
 export VERSION=$(
   sentry-cli releases propose-version \
-    || echo "${SENTRY_RELEASE_PREFIX:-local}-$(date +%Y%m%d)"
+    || echo "$SENTRY_RELEASE_FALLBACK"
 )
 
 echo "Releasing Version: $VERSION..."
