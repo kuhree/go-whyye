@@ -7,14 +7,14 @@
     <title>Why, Ye?</title>
     <meta type="description" content="Get a random quote from your favorite icons." />
     <link rel="stylesheet" type="text/css" href="/static/index.css"/>
-    {{ if .AnalyticsHost }}
-      <script 
-        defer 
-        src="{{ .AnalyticsSrc }}" 
-        data-website-id="{{ .AnalyticsId }}"
-        data-host-url="{{ .AnalyticsHost }}"
-      >
-      </script>
+    {{ if .AnalyticsSrc }}
+    <script 
+      defer 
+      src="{{ .AnalyticsSrc }}" 
+      data-website-id="{{ .AnalyticsId }}"
+      data-host-url="{{ .AnalyticsHost }}"
+    >
+    </script>
     {{ end }}
   </head>
 
@@ -31,7 +31,7 @@
                   <!-- render users list from db -->
                   {{ range .Users }}
                       {{ if eq $.UserId .ID }}
-                          <option value="{{ .ID }}" selected="true">{{ .Name }}</option>
+                      <option value="{{ .ID }}" selected="true">{{ .Name }}</option>
                       {{ else }}
                           <option value="{{ .ID }}">{{ .Name }}</option>
                       {{ end }}
@@ -40,8 +40,10 @@
               <button 
                 type="submit" 
                 data-umami-event="get-quote"
+                {{ if .UserId }}
                 data-umami-event-userid="{{ .UserId }}"
                 data-umami-event-quote="{{ .Quote }}"
+                {{ end}}
               >
                 Get Random Quote
               </button>
