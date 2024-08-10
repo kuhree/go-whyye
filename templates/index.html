@@ -13,8 +13,13 @@
       src="{{ .UmamiSrc }}" 
       data-website-id="{{ .UmamiId }}"
       data-host-url="{{ .UmamiHost }}"
-    >
-    </script>
+    ></script>
+    {{ end }}
+    {{ if .SentrySrc }}
+    <script
+      src="{{ .SentrySrc}}"
+      crossorigin="anonymous"
+    ></script>
     {{ end }}
   </head>
 

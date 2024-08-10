@@ -186,6 +186,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	var UmamiSrc string
 	var UmamiId string
 	var UmamiHost string
+	var SentrySrc string
 
 	app_env, exists := os.LookupEnv("APP_ENV")
 	if !exists {
@@ -193,7 +194,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if id, exists := os.LookupEnv("UMAMI_ID"); app_env == "production" && exists {
-		UmamiId = id
+		UmamiId = id 
 	} else {
 		UmamiId = "aae9f446-af9b-4324-994a-0ba7033b3beb"
 	}
@@ -210,15 +211,20 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		UmamiSrc = UmamiHost + "/script.js"
 	}
 
-	vars := map[string]interface{}{
-		"Users":  users,
-		"UserId": userId,
-		"Quote":  qt.String(),
-		"Year":   time.Now().Year(),
+	if exists && app_env == "production" {
+		SentrySrc = "https://js.sentry-cdn.com/90e17d36eb513ef745bb13f0f6b621dc.min.js"
+	}
 
+	vars := map[string]interface{}{
 		"UmamiHost": UmamiHost,
 		"UmamiId": UmamiId,
 		"UmamiSrc": UmamiSrc,
+		"SentrySrc": SentrySrc,
+		"Year":   time.Now().Year(),
+
+		"Users":  users,
+		"UserId": userId,
+		"Quote":  qt.String(),
 	}
 
 	err = tmpl.ExecuteTemplate(w, "index.html", vars)
