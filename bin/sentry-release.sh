@@ -1,5 +1,7 @@
 #! /usr/bin/env sh
 
+[ "$SKIP_RELEASE" = "1" ] && echo "Skipping release build" && exit 0
+
 if [ -z $SENTRY_AUTH_TOKEN ]; then
   echo "SENTRY_AUTH_TOKEN is not set. Exiting..."
   exit 1
