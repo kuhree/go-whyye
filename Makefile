@@ -1,8 +1,5 @@
 .PHONY: clean build serve run dev
 
-include .env
-include .env.production
-
 DATE=$(shell date +%Y%m%d)
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 LONG_SHA=$(shell git rev-parse HEAD)
