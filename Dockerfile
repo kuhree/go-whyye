@@ -16,10 +16,11 @@ RUN mkdir -p ./out ./out/state ./out/share ./out/bin \
 
 FROM getsentry/sentry-cli:latest AS release
 WORKDIR /app
+ENV SKIP_RELEASE=${SKIP_RELEASE:-1}
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
 COPY --from=base /app ./
-RUN ./bin/sentry-release.sh
+RUN if [[ "$SKIP_RELEASE" != "1" ]]; then ./bin/sentry-release.sh; fi
 
 FROM alpine:latest AS runner
 ENV USER=appuser
