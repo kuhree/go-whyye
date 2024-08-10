@@ -14,15 +14,12 @@ fi
 export SENTRY_LOG_LEVEL=info
 export SENTRY_ORG=${SENTRY_ORG:-gvempire}
 export SENTRY_PROJECT=${SENTRY_PROJECT:-"go-whyye"}
-export VERSION=$(
-  sentry-cli releases propose-version |
-  xargs
-)
 
 # If version is empty, set a default
-if [ -z "$VERSION" ]; then
-  VERSION="docker-$(date '+%Y%m%d')"
-fi
+export VERSION=$(
+  sentry-cli releases propose-version \
+    || echo "${SENTRY_VERSION:-local}-$(date +%Y%m%d)"
+)
 
 echo "Releasing Version: $VERSION..."
 
