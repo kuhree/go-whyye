@@ -18,6 +18,7 @@ FROM getsentry/sentry-cli:latest AS release
   WORKDIR /app
   ARG SKIP_RELEASE="1"
   ENV SKIP_RELEASE=${SKIP_RELEASE}
+  ARG SENTRY_AUTH_TOKEN=""
   ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
   COPY --from=base /app ./
