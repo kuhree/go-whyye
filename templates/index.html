@@ -41,8 +41,7 @@
                 type="submit" 
                 data-umami-event="get-quote"
                 {{ if .UserId }}
-                data-umami-event-userid="{{ .UserId }}"
-                data-umami-event-quote="{{ .Quote }}"
+                  data-umami-event-userid="{{ .UserId }}"
                 {{ end}}
               >
                 Get Random Quote
