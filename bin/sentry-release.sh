@@ -14,15 +14,20 @@ fi
 export SENTRY_LOG_LEVEL=info
 export SENTRY_ORG=${SENTRY_ORG:-gvempire}
 export SENTRY_PROJECT=${SENTRY_PROJECT:-"go-whyye"}
-export VERSION=${SENTRY_RELEASE:-$(
+export VERSION=$(
   sentry-cli releases propose-version |
   xargs
-)}
+)
 
-echo "Version: $VERSION"
+# If version is empty, set a default
+if [ -z "$VERSION" ]; then
+  VERSION="docker-$(date '+%Y%m%d')"
+fi
+
+echo "Releasing Version: $VERSION..."
 
 sentry-cli releases new "$VERSION" \
-  && sentry-cli releases set-commits --auto "$VERSION" || echo "Failed to set commits" \
+  && (sentry-cli releases set-commits --auto "$VERSION" || echo "Failed to set related commit") \
   && sentry-cli releases finalize "$VERSION"
 
 sentry-cli releases deploys $VERSION new -e ${APP_ENV:-development}
