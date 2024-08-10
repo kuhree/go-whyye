@@ -1,4 +1,4 @@
-.PHONY: clean build serve run dev
+.PHONY: init clean build run dev build serve docker-pull docker-dev docker-build docker-serve
 
 DATE=$(shell date +%Y%m%d)
 SHORT_SHA=$(shell git rev-parse --short HEAD)
