@@ -19,11 +19,6 @@ export VERSION=${SENTRY_RELEASE:-$(
   xargs
 )}
 
-# If version is empty, set a default
-if [ -z "$VERSION" ]; then
-  VERSION="docker-$(date '+%Y%m%d')"
-fi
-
 echo "Version: $VERSION"
 
 sentry-cli releases new "$VERSION" \
