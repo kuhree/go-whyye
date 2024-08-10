@@ -1,3 +1,5 @@
+ARG APP_ENV="production"
+
 FROM golang:1.22.5-alpine AS deps
   ENV GOOS=linux
   ENV CGO_ENABLED=1
@@ -17,13 +19,14 @@ FROM deps AS builder
     && go build -ldflags '-w -s -extldflags "-static"' -a -o ./entrypoint main.go
 
 FROM getsentry/sentry-cli:latest AS release
-  WORKDIR /app
+  ENV APP_ENV=${APP_ENV}
   ARG SKIP_RELEASE="1"
   ENV SKIP_RELEASE=${SKIP_RELEASE}
   ARG SENTRY_RELEASE="docker"
   ENV SENTRY_RELEASE=${SENTRY_RELEASE}
   ARG SENTRY_AUTH_TOKEN=""
   ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+  WORKDIR /app
 
   COPY --from=builder /app ./
   RUN ./bin/sentry-release.sh
@@ -32,7 +35,7 @@ FROM alpine:latest AS runner
   ENV USER=appuser
   ENV UID=10001
   ENV PORT=${PORT:-8080}
-  ENV APP_ENV=${APP_ENV:-production}
+  ENV APP_ENV=${APP_ENV}
   WORKDIR /app
 
   COPY --from=deps /usr/share/zoneinfo /usr/share/zoneinfo

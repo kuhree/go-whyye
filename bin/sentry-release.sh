@@ -22,5 +22,8 @@ export VERSION=${SENTRY_RELEASE:-$(
 echo "Version: $VERSION"
 
 sentry-cli releases new "$VERSION" \
-  && sentry-cli releases set-commits "$VERSION" --auto \
+  && sentry-cli releases set-commits --auto "$VERSION" || echo "Failed to set commits" \
   && sentry-cli releases finalize "$VERSION"
+
+sentry-cli releases deploys $VERSION new -e ${APP_ENV:-development}
+
