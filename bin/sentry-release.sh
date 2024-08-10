@@ -14,10 +14,10 @@ fi
 export SENTRY_LOG_LEVEL=info
 export SENTRY_ORG=${SENTRY_ORG:-gvempire}
 export SENTRY_PROJECT=${SENTRY_PROJECT:-"go-whyye"}
-export VERSION=$(
+export VERSION=${SENTRY_RELEASE:-$(
   sentry-cli releases propose-version |
   xargs
-)
+)}
 
 # If version is empty, set a default
 if [ -z "$VERSION" ]; then

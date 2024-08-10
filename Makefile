@@ -48,6 +48,7 @@ docker-build:
 		--tag git.littlevibe.net/kuhree/go-whyye:${DATE} \
 		--tag git.littlevibe.net/kuhree/go-whyye:${SHORT_SHA} \
 		--tag git.littlevibe.net/kuhree/go-whyye:${LONG_SHA} \
+		--build-arg SENTRY_RELEASE=${LONG_SHA} \
 		.
 
 docker-serve: 

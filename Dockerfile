@@ -1,14 +1,16 @@
-FROM golang:1.22.5-alpine AS base
+FROM golang:1.22.5-alpine AS deps
   ENV GOOS=linux
   ENV CGO_ENABLED=1
   WORKDIR /app
 
-  RUN apk update && apk upgrade \ 
-          && apk add --no-cache git ca-certificates tzdata \
-          && update-ca-certificates
-
   COPY go.mod go.sum package.json ./
-  RUN go mod download && apk add --no-cache ca-certificates build-base
+  RUN apk update && apk upgrade \ 
+          && apk add --no-cache git ca-certificates tzdata build-base \
+          && update-ca-certificates \
+          && go mod download
+
+FROM deps AS builder
+  WORKDIR /app
 
   COPY . .
   RUN mkdir -p ./out ./out/state ./out/share ./out/bin \
@@ -18,10 +20,12 @@ FROM getsentry/sentry-cli:latest AS release
   WORKDIR /app
   ARG SKIP_RELEASE="1"
   ENV SKIP_RELEASE=${SKIP_RELEASE}
+  ARG SENTRY_RELEASE=""
+  ENV SENTRY_RELEASE=${SENTRY_RELEASE}
   ARG SENTRY_AUTH_TOKEN=""
   ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
-  COPY --from=base /app ./
+  COPY --from=builder /app ./
   RUN ./bin/sentry-release.sh
 
 FROM alpine:latest AS runner
@@ -31,10 +35,10 @@ FROM alpine:latest AS runner
   ENV APP_ENV=${APP_ENV:-production}
   WORKDIR /app
 
-  COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
-  COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-  COPY --from=base /etc/passwd /etc/passwd   
-  COPY --from=base /etc/group /etc/group
+  COPY --from=deps /usr/share/zoneinfo /usr/share/zoneinfo
+  COPY --from=deps /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+  COPY --from=deps /etc/passwd /etc/passwd   
+  COPY --from=deps /etc/group /etc/group
   COPY --from=release /app ./
 
   # Add user
