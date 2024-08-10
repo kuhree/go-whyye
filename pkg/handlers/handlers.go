@@ -183,15 +183,31 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 		qt = quote.GetRandom(quotes)
 	}
-	var AnalyticsSrc string
-	var AnalyticsId string
-	var AnalyticsHost string
+	var UmamiSrc string
+	var UmamiId string
+	var UmamiHost string
 
 	app_env, exists := os.LookupEnv("APP_ENV")
-	if exists && app_env == "production" {
-		AnalyticsSrc = "https://umami.littlevibe.net/script.js"
-		AnalyticsId = "aa24ac89-ef05-4bdf-a99b-402988a6f226"
-		AnalyticsHost = "https://umami.littlevibe.net/script.js"
+	if !exists {
+		app_env = "development"
+	}
+
+	if id, exists := os.LookupEnv("UMAMI_ID"); app_env == "production" && exists {
+		UmamiId = id
+	} else {
+		UmamiId = "aae9f446-af9b-4324-994a-0ba7033b3beb"
+	}
+
+	if host, exists := os.LookupEnv("UMAMI_HOST"); app_env == "production" && exists {
+		UmamiHost = host
+	} else {
+		UmamiHost = "https://umami-go-whyye.gvempire.dev"
+	}
+
+	if src, exists := os.LookupEnv("UMAMI_SRC"); app_env == "production" && exists {
+		UmamiSrc = src
+	} else {
+		UmamiSrc = UmamiHost + "/script.js"
 	}
 
 	vars := map[string]interface{}{
@@ -200,9 +216,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"Quote":  qt.String(),
 		"Year":   time.Now().Year(),
 
-		"AnalyticsSrc": AnalyticsSrc,
-		"AnalyticsId": AnalyticsId,
-		"AnalyticsHost": AnalyticsHost,
+		"UmamiHost": UmamiHost,
+		"UmamiId": UmamiId,
+		"UmamiSrc": UmamiSrc,
 	}
 
 	err = tmpl.ExecuteTemplate(w, "index.html", vars)
