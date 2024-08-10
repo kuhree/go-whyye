@@ -27,5 +27,5 @@ sentry-cli releases new "$VERSION" \
   && (sentry-cli releases set-commits --auto "$VERSION" || echo "Failed to set related commit") \
   && sentry-cli releases finalize "$VERSION"
 
-sentry-cli releases deploys $VERSION new -e ${APP_ENV:-development}
+sentry-cli releases deploys $VERSION new -e ${APP_ENV:-production}
 
