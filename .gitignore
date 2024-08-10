@@ -1,2 +1,4 @@
 out/
 go-whyye
+
+.env*

@@ -11,8 +11,15 @@ COPY go.mod go.sum package.json ./
 RUN go mod download && apk add --no-cache ca-certificates build-base
 
 COPY . .
-RUN mkdir -p ./out ./out/state ./out/share ./out/bin && \
-  go build -ldflags '-w -s -extldflags "-static"' -a -o ./entrypoint main.go
+RUN mkdir -p ./out ./out/state ./out/share ./out/bin \
+  && go build -ldflags '-w -s -extldflags "-static"' -a -o ./entrypoint main.go
+
+FROM getsentry/sentry-cli:latest AS release
+WORKDIR /app
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+
+COPY --from=base /app ./
+RUN ./bin/sentry-release.sh
 
 FROM alpine:latest AS runner
 ENV USER=appuser
@@ -25,7 +32,7 @@ COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=base /etc/passwd /etc/passwd   
 COPY --from=base /etc/group /etc/group
-COPY --from=base /app ./
+COPY --from=release /app ./
 
 # Add user
 RUN adduser \
