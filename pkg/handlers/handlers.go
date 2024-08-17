@@ -196,13 +196,13 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if id, exists := os.LookupEnv("UMAMI_ID"); app_env == "production" && exists {
 		UmamiId = id 
 	} else {
-		UmamiId = "aae9f446-af9b-4324-994a-0ba7033b3beb"
+		UmamiId = ""
 	}
 
 	if host, exists := os.LookupEnv("UMAMI_HOST"); app_env == "production" && exists {
 		UmamiHost = host
 	} else {
-		UmamiHost = "https://umami-go-whyye.gvempire.dev"
+		UmamiHost = "https://umami.littlevibe.net"
 	}
 
 	if src, exists := os.LookupEnv("UMAMI_SRC"); app_env == "production" && exists {
