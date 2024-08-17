@@ -12,7 +12,7 @@ if ! command -v sentry-cli > /dev/null; then
 fi
 
 export SENTRY_LOG_LEVEL=info
-export SENTRY_ORG=${SENTRY_ORG:-gvempire}
+export SENTRY_ORG=${SENTRY_ORG:-kuhree}
 export SENTRY_PROJECT=${SENTRY_PROJECT:-"go-whyye"}
 
 # If version is empty, set a default
